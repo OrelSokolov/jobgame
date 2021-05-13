@@ -8,3 +8,6 @@ jobs:
       - run:
           name: Bundle
           command: bundle install
+      - run:
+          name: Rspec
+          command: rspec spec/
