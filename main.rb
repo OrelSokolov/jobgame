@@ -7,3 +7,11 @@
 # Если выходишь за границы, такой шаг ничего не делает.
 
 
+require_relative 'lib/character'
+require_relative 'lib/field'
+require_relative 'lib/game'
+
+
+game = Game.new(Field.new(5, 5), Character.new)
+game.play('MMM')
+game.show_character

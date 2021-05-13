@@ -1,3 +1,5 @@
+require 'pry'
+
 class Game
   class BoundaryError < Exception
   end
@@ -25,17 +27,18 @@ class Game
 
   def play(raw_route)
     route = raw_route.upcase
-    raise ArgumentError, "Route should be string or smth like that" unless route.class.kind_of? String
-    raise ArgumentError, "Route should include only allowed symbols" unless route.match? route_regex
+    raise ArgumentError, "Route should be string or smth like that" unless route.kind_of? String
+    raise ArgumentError, "Route should include only allowed symbols" unless route_regex.match? route
 
-    route.each do |cmd|
+    route.split("").each do |cmd|
       begin
-        next_pos = @character.next_position(cmd)
+        next_pos = @character.next_position
         if direction_change? cmd
           @character.change_direction!(cmd)
         end
         if move?(cmd)
           if @field.position_allowed?(next_pos[:x], next_pos[:y])
+            @character.move!
           else
             raise Game::BoundaryError, "moving from #{@character.x} #{@character.y} in diretion #{@character.direction}"
           end
