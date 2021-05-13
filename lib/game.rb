@@ -45,9 +45,9 @@ class Game
         end
 
       rescue Game::BoundaryError => e
-        STDERR.puts "Boundary collision, just FYI: #{e.msg}"
+        STDERR.puts "Boundary collision, just FYI: #{e.message}"
       rescue Character::WrongDirectionError => e
-        STDERR.puts e.msg
+        STDERR.puts e.message
       end
     end
   end

@@ -3,12 +3,16 @@ class Character
 
   end
 
-  attr_reader :x, :y, :direction
+  attr_reader :x, :y
 
   def initialize(x = 0 , y = 0 )
     @directions = %W|N E S W|
     @x = x
     @y = y
+  end
+
+  def direction
+    @directions.first
   end
 
   def move!
@@ -24,9 +28,9 @@ class Character
     when 'E'
       { x: @x+1, y: @y}
     when "S"
-      { x: @x-1, y: @y}
-    when "S"
       { x: @x, y: @y-1}
+    when "W"
+      { x: @x-1, y: @y}
     end
   end
 
@@ -34,10 +38,10 @@ class Character
     case direction_cmd
     when 'L'
       d = -1
-      @directions = @direction.rotate(d)
+      @directions = @directions.rotate(d)
     when 'R'
       d = 1
-      @directions = @direction.rotate(d)
+      @directions = @directions.rotate(d)
     else
       raise WrongDirectionError, "Wrong direction command"
     end

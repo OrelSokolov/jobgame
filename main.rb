@@ -13,5 +13,5 @@ require_relative 'lib/game'
 
 
 game = Game.new(Field.new(5, 5), Character.new)
-game.play('MMM')
+game.play('MMMLM')
 game.show_character
