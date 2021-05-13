@@ -10,20 +10,33 @@
 class BoundaryError < Exception
 end
 
+class WrongDirectionError < Exception
+
+end
+
 
 class Character
-  attr_reader :x, :y
+  attr_reader :x, :y, :direction
 
   def initialize(x = 0 , y = 0 )
-    @direction = :N
+    @directions = %W|N E S W|
   end
 
   def next_position(cmd)
 
   end
 
-  def append_route(route)
-
+  def change_direction!(direction_cmd)
+    case direction_cmd
+    when 'L'
+      d = -1
+      @directions = @direction.rotate(d)
+    when 'R'
+      d = 1
+      @directions = @direction.rotate(d)
+    else
+      raise WrongDirectionError, "Wrong direction command"
+    end
   end
 
 end
@@ -54,18 +67,36 @@ class Game
     @route_regex ||= /^[MLR]+$/
   end
 
-  def play(route)
-    r_uppcase = route.upcase
-    raise ArgumentError, "Route should be string or smth like that" unless r_upcase.class.kind_of? String
-    raise ArgumentError, "Route should include only allowed symbols" unless r_upcase.match? route_regex
+  def direction_change?(cmd)
+    "RL".include? cmd
+  end
+
+  def move?(cmd)
+    cmd == 'M'
+  end
+
+  def play(raw_route)
+    route = raw_route.upcase
+    raise ArgumentError, "Route should be string or smth like that" unless route.class.kind_of? String
+    raise ArgumentError, "Route should include only allowed symbols" unless route.match? route_regex
 
     route.each do |cmd|
       begin
         next_pos = @character.next_position(cmd)
-        #@field.position_allowed?(next_pos[:x], next_pos[:y])
+        if direction_change? cmd
+          @character.change_direction!(cmd)
+        end
+        if move?(cmd)
+          if @field.position_allowed?(next_pos[:x], next_pos[:y])
+          else
+            raise BoundaryError, "moving from #{@character.x} #{@character.y} in diretion #{@character.direction}"
+          end
+        end
 
-      rescue BoundaryError
-        STDERR.puts "Invalid boundary, just FYI."
+      rescue BoundaryError => e
+        STDERR.puts "Boundary collision, just FYI: #{e.msg}"
+      rescue WrongDirectionError => e
+        STDERR.puts e.msg
       end
     end
   end
