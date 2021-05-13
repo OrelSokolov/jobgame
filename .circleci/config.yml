@@ -1,0 +1,10 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.7.1
+    steps:
+      - checkout
+      - run:
+          name: Bundle
+          command: bundle install
