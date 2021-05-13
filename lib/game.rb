@@ -1,5 +1,3 @@
-require 'pry'
-
 class Game
   class BoundaryError < Exception
   end
